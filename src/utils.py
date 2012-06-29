@@ -22,6 +22,9 @@ else:
         return isinstance(x, unicode)
     
 class Path:
+
+    USERRETRIEVE = "user"
+    NODERETRIEVE = "node"
     CONNECT = "system/connect"
     LOGIN = "user/login"
     
@@ -55,9 +58,9 @@ def request(method='POST'):
                 
                 parsed = urlparse.urlparse(useurl)      #Making the path URL Quoted
                 useurl = urlparse.urlunparse(parsed[:2]+(urllib2.quote(parsed.path.encode("utf8")),)+parsed[3:])
-                print "URL =", useurl
-                print "Headers =", headers
-                print "Data =", data
+#                print "URL =", useurl
+#                print "Headers =", headers
+#                print "Data =", data
                 request = urllib2.Request(url=useurl, data=data, headers=headers)
                 with closing(urllib2.urlopen(request)) as req:
                     retval = ServiceResponse(data=req.read(),headers=req.info())
