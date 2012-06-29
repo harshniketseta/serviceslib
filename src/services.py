@@ -4,7 +4,7 @@ Created on Jun 24, 2012
 @author: harsh
 '''
 from utils import request, Path, Auth, dejsonify_response, Header
-import xmlrpclib
+from xmlrpclib import Server
 import pprint
 from urllib2 import HTTPError
 
@@ -82,26 +82,29 @@ class Rest(BaseService):
     def retrieve_user(self, headers=None, **kargs):
         return "{host}/{path}".format(host=self.fullurl, path=Path.USERRETRIEVE), self.add_auth_header(headers), kargs
     
-class XMLRPC(BaseService):
+class XMLRPC(Server):
     '''
     A class which lets you make XMLRPC calls to your Drupal Site.
     '''
     
-    def do_session_login(self, username, password):
-        connect = self.connect()
-        self.sessid = connect['sessid']
+    def __init__(self, host, path):
+        '''
+        '''
         
-        login = self.login(username=username, password=password, sessid=self.sessid)
+        self.fullurl = "http://{host}/{path}".format(host=host, path=path)
+        super(XMLRPC, self).__init__(self.fullurl)
+            
+    def login(self, username, password, oauth_key=None):
+        '''
+        '''
+        
+        if oauth_key:
+            connect = self.system.connect(oauth_key)
+            login = self.user.login(self.oauth_key, connect['sessid'], username, password)  
+        else:
+            connect = self.system.connect()
+            login = self.user.login(username=username, password=password, sessid=connect['sessid'])
+            
         self.auth_header = "{session_name}={sessid}".format(session_name=login["session_name"], sessid=login['sessid'])
         self.user = login['user']
-    
-    def do_oauth_login(self, username, password):
-        pass
-                    
-    def connect(self, **kargs):
-        self.xmlrpc_server = xmlrpclib.Server(self.fullurl)
-        return self.xmlrpc_server.system.connect()
-    
-    def login(self, **kargs):
-        return self.xmlrpc_server.user.login(*kargs.values())
-        
+                
