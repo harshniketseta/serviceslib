@@ -3,14 +3,9 @@ Created on Jun 24, 2012
 
 @author: harsh
 '''
-from utils import request, Path, Auth, dejsonify_response, Header
+from utils import request, Path, Auth, dejsonify_response, Header, get_transport,\
+    Invalid_Parameters_Exception
 from xmlrpclib import Server
-import pprint
-from urllib2 import HTTPError
-
-class Invalid_Parameters_Exception(Exception):
-    pass
-
 
 class BaseService(object):
     '''
@@ -71,11 +66,7 @@ class Rest(BaseService):
     @dejsonify_response
     @request(method='GET')
     def retrieve_node(self, nid='', headers=None, **kargs):
-        try:
-            return "{host}/{path}/{nid}".format(host=self.fullurl, path=Path.NODERETRIEVE, nid=nid), self.add_auth_header(headers), kargs
-        except HTTPError:
-            print "HTTPERROR Occur"
-            return None
+        return "{host}/{path}/{nid}".format(host=self.fullurl, path=Path.NODERETRIEVE, nid=nid), self.add_auth_header(headers), kargs
     
     @dejsonify_response
     @request(method='GET')
@@ -92,7 +83,7 @@ class XMLRPC(Server):
         '''
         
         self.fullurl = "http://{host}/{path}".format(host=host, path=path)
-        super(XMLRPC, self).__init__(self.fullurl)
+        super(XMLRPC, self).__init__(uri=self.fullurl, transport=get_transport(self.fullurl))
             
     def login(self, username, password, oauth_key=None):
         '''
@@ -100,7 +91,7 @@ class XMLRPC(Server):
         
         if oauth_key:
             connect = self.system.connect(oauth_key)
-            login = self.user.login(self.oauth_key, connect['sessid'], username, password)  
+            login = self.user.login(oauth_key, connect['sessid'], username, password)  
         else:
             connect = self.system.connect()
             login = self.user.login(username=username, password=password, sessid=connect['sessid'])

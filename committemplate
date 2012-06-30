@@ -1,0 +1,16 @@
+# A good commit message looks like the this:
+
+# Header line: explaining the commit in one line
+
+# Body of commit: A few lines explaining the changes in more detail,
+# possibly some background on the issue fixed or feature added
+
+
+
+
+# Where that header line really should be meaningful, and really should be
+# just one line.  That header line is what is shown by tools like gitk and
+# shortlog, and should summarize the change in one readable line of text,
+# independently of the longer explanation.
+
+##---------------------------------------------------------------------##

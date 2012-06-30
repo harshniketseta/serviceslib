@@ -16,6 +16,8 @@ Nodes = Nodes.data
 pprint.pprint(Nodes)
 
 xmlrpc_path="xmlrpc"
-#xmlrpc = XMLRPC(host=host, path=xmlrpc_path, username="admin", password="admin", auth=Auth.SESSION)
+xmlrpc = XMLRPC(host=host, path=xmlrpc_path)
+xmlrpc.login(username="admin", password="admin", auth=Auth.SESSION)
+
 #rest.connect()
 #rest.login()
