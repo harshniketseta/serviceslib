@@ -62,16 +62,13 @@ class Rest(BaseService):
     @request(method='POST')
     def login(self, headers=None, **kargs):
         return "{host}/{path}".format(host=self.fullurl, path=Path.LOGIN), headers, kargs
+
+    def node(self, action, **kargs):
+        pass
     
-    @dejsonify_response
-    @request(method='GET')
-    def retrieve_node(self, nid='', headers=None, **kargs):
-        return "{host}/{path}/{nid}".format(host=self.fullurl, path=Path.NODERETRIEVE, nid=nid), self.add_auth_header(headers), kargs
+    def user(self, action, **kargs):
+        pass
     
-    @dejsonify_response
-    @request(method='GET')
-    def retrieve_user(self, headers=None, **kargs):
-        return "{host}/{path}".format(host=self.fullurl, path=Path.USERRETRIEVE), self.add_auth_header(headers), kargs
     
 class XMLRPC(Server):
     '''

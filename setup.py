@@ -2,9 +2,10 @@
 from setuptools import find_packages, setup
 from glob import glob
 
+import serviceslib
 
 setup(name='serviceslib',
-      version=fabric.__version__,
+      version=serviceslib.__version__,
       description='A Python library to make calls to Drupal Services painless.',
       long_description=serviceslib.__doc__,
       author=serviceslib.__author__,
